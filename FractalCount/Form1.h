@@ -174,6 +174,8 @@ namespace FractalCount {
 	
 		// extern 
 			 Bitmap^ bitmap1;
+			 Bitmap^ bitmap2;
+		
 
 	private: System::Void buttonOpenBitmap_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
@@ -209,7 +211,7 @@ private: System::Void buttonStart_Click(System::Object^  sender, System::EventAr
 
 			int minHorW = min(bitmap1->Height, bitmap1->Width);
 			int startSize = 5;
-			int finishSize = min(minHorW, 100);
+			int finishSize = min(minHorW, 20);
 			int step = 1;
 			int bitmap_array = bitmap1->Height * bitmap1->Width;
 			String^ fileName = "out.txt";  
@@ -221,35 +223,40 @@ private: System::Void buttonStart_Click(System::Object^  sender, System::EventAr
 			const unsigned int bitmapMatrix_Width = bitmap1->Width;
 						
 			//int bitmapMatrix [bitmapMatrix_Height][bitmapMatrix_Width];  
-			
-			int **bitmapMatrix = new int* [bitmapMatrix_Height]; // строки в массиве
-			for (int count = 0; count < bitmapMatrix_Height; count++)
-				bitmapMatrix[count] = new int [bitmapMatrix_Width]; // столбцы в массиве
-			
 			/*
-			for (int y = 0; y < bitmap1->Height; y++)
+			int **bitmapMatrix = new int* [bitmapMatrix_Width]; // строки в массиве
+			for (int count = 0; count < bitmapMatrix_Width; count++)
+				bitmapMatrix[count] = new int [bitmapMatrix_Height]; // столбцы в массиве
+			
+			for (int x = 0; x < bitmapMatrix_Width; x++)
 			{
-				for (int x = 0; x < bitmap1->Width; x++)
+				for (int y = 0; y < bitmapMatrix_Height; y++)
 				{
-
-					Color pixelColor = bitmap1->GetPixel (x,y); // y x
-					Color fractalColor = Color::FromArgb(0,0,0);
-					if (pixelColor == fractalColor)
-					{
-						bitmapMatrix[y][x] = 1;
-						bitmap_pixel_black++;
-					}
-					else if (pixelColor != fractalColor)
-					{
-						bitmapMatrix[y][x] = 0;
-					}
-					bitmap_pixel++;
-
-				//	sw->Write(System::Convert::ToString(bitmapMatrix[y][x])); 				 
+					bitmapMatrix[x][y] = 0;
 				}
-			//	sw->WriteLine(); 	
-				label1->Text = "Pixels: " + bitmap_pixel + " / " + bitmap_array + ", " + bitmap_pixel_black + " is black";
-				Application::DoEvents();
+			}
+
+			for (int x = 0; x < bitmapMatrix_Width; x++)
+			{
+				for (int y = 0; y < bitmapMatrix_Height; y++)
+				{
+					Color pixelColor = bitmap1->GetPixel (x,y);
+					int int_pixelColor = pixelColor.System::Drawing::Color::ToArgb();
+
+					Color fractalColor = Color::Black;
+					int int_fractalColor = fractalColor.System::Drawing::Color::ToArgb();
+
+					if (int_pixelColor == int_fractalColor)
+					{
+						bitmapMatrix[x][y] = 1;
+						
+					}
+					sw->Write(System::Convert::ToString(bitmapMatrix[x][y])); 
+					Application::DoEvents();
+				}
+				//	label1->Text = "Pixels: " + bitmap_pixel + " / " + bitmap_array + ", " + bitmap_pixel_black + " is black";
+				//	Application::DoEvents();
+				sw->WriteLine();
 			}
 			*/
 
@@ -262,18 +269,18 @@ private: System::Void buttonStart_Click(System::Object^  sender, System::EventAr
 				int hCount = bitmap1->Height/b;
 				int wCount = bitmap1->Width/b;
 				
-
-		//		bool* filledBoxes = new bool [ wCount + (bitmap1->Width > wCount*b ? 1 : 0), hCount + (bitmap1->Height > hCount*b ? 1 : 0) ];
-		//		bool* filledBoxes2 = new bool [ wCount + (bitmap1->Width > wCount*b ? 1 : 0)][hCount + (bitmap1->Height > hCount*b ? 1 : 0) ];
 				
 				int fractal_count_fB_0 = wCount + (bitmap1->Width > wCount*b ? 1 : 0);
 				int fractal_count_fB_1 = hCount + (bitmap1->Height > hCount*b ? 1 : 0);
+
+				sw->WriteLine("fractal_count_fB_0: "+System::Convert::ToString(fractal_count_fB_0)+" / fractal_count_fB_1: "+System::Convert::ToString(fractal_count_fB_1)); 
 
 				bool **filledBoxes = new bool* [fractal_count_fB_0]; // строки в массиве
 				for (int count = 0; count < fractal_count_fB_0; count++)
 					filledBoxes[count] = new bool [fractal_count_fB_1]; // столбцы в массиве
 				
-
+				
+				
 				for (int i = 0; i < fractal_count_fB_0; i++)
 				{
 					for (int j = 0; j < fractal_count_fB_1; j++)
@@ -304,18 +311,16 @@ private: System::Void buttonStart_Click(System::Object^  sender, System::EventAr
 						int yBox = y/b;
 						filledBoxes[xBox][yBox] = true;
 						bitmap_pixel_black++;
-						sw->WriteLine("xBox: "+System::Convert::ToString(xBox)+" / yBox: "+System::Convert::ToString(yBox)); 
-						sw->WriteLine("x: "+System::Convert::ToString(x)+" / y: "+System::Convert::ToString(y)); 
-						sw->WriteLine("b: "+System::Convert::ToString(b));
 						}
 						bitmap_pixel++;
-
+						
 						Application::DoEvents();
 					}
 					//	label1->Text = "Pixels: " + bitmap_pixel + " / " + bitmap_array + ", " + bitmap_pixel_black + " is black";
 					//	Application::DoEvents();
+					
 				}
-				sw->WriteLine("Black pixels: "+System::Convert::ToString(bitmap_pixel_black)+" / Pixels: "+System::Convert::ToString(bitmap_pixel)); 
+			//	sw->WriteLine("Black pixels: "+System::Convert::ToString(bitmap_pixel_black)+" / Pixels: "+System::Convert::ToString(bitmap_pixel)); 
 				
 				
 				int a = 0;
@@ -343,6 +348,47 @@ private: System::Void buttonStart_Click(System::Object^  sender, System::EventAr
 				mapA = System::Math::Log(1.0 / System::Convert::ToDouble(b));
 				mapB = System::Math::Log(aD);
 				baList->Add(mapA, mapB);
+
+				
+				// Bitmap graphics
+
+						Image ^ Img2 = gcnew Bitmap(bitmap1);
+						Graphics^ bitmap2_Grapghics = Graphics::FromImage(Img2);
+						Pen^ pinkPen = gcnew Pen( Color::HotPink );
+						Brush^ redBrush = gcnew SolidBrush( Color::Red );
+						String ^fractalFile = "Bitmap_" +  System::Convert::ToString(b) + ".bmp"; 
+
+						for (int i = 0; i < fractal_count_fB_0; i++)
+						{
+						bitmap2_Grapghics->DrawLine(pinkPen, i * b, 0, i * b, Img2->Height);
+						}
+						for (int j = 0; j < fractal_count_fB_1; j++)
+						{
+						bitmap2_Grapghics->DrawLine(pinkPen, 0, j * b, Img2->Width, j * b);
+						}
+						
+						/*
+						for (int i = 0; i < fractal_count_fB_0; i++)
+						{
+							for (int j = 0; j < fractal_count_fB_1; j++)
+							{
+								if (filledBoxes[i][j] == true)
+								{
+									bitmap2_Grapghics->FillRectangle(redBrush, i * b, j * b, i * b + b, j * b + b);
+									
+								}
+							
+								
+							}
+						}
+						*/
+						
+						bitmap2_Grapghics->DrawImage(Img2, 0, 0);
+						pictureBox1->Image = Img2;
+						
+						
+					//	Img2->Save(fractalFile, System::Drawing::Imaging::ImageFormat::Bmp);
+					
 
 		//	System::Threading::Thread::Sleep(100);
 			progressBar1->Value = b;

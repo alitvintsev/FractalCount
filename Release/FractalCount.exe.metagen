@@ -28,3 +28,4 @@ Class FractalCount.Form1: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     Int32 bitmap_pixel_ptr : Public
     Int32 bitmap_pixel_black : Public
     System.Drawing.Bitmap bitmap1 : Public
+    System.Drawing.Bitmap bitmap2 : Public
